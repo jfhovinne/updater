@@ -1,0 +1,46 @@
+# Drupal website instance updater
+
+A Drush command to update a website instance by executing available "updaters".
+An updater is a simple PHP function which is executed during execution of the Drush `update-website` command.
+The Drush command keeps track of updaters already executed, so they are not executed twice on the same Drupal instance.
+Updaters have access to usual Drupal APIs and other Drush commands.
+
+This is useful when you want to test and automate your updates and deployments, e.g. after developing a new feature, since updaters are simple PHP scripts that can be included in your feature branches.
+Example usage is putting the site in maintenance mode, enabling a module, creating taxonomy terms, publishing a page and putting the site back online.
+Code is lightweight and integrates well in a continuous integration / continuous deployment workflow.
+
+It is an alternative to available Drupal update/deployment tools, as it does not require a module to be created, and is Drupal 7 and 8 compatible already.
+In theory, a Drupal instance configuration could be rebuilt from installation time to current state if only updated by updaters.
+
+## Installation
+
+```
+drush dl updater
+cd /path/to/.drush/updater
+composer install
+```
+
+## Usage
+
+```php
+drush update-website --path=/path/to/my/updaters
+```
+
+In the above example, the `drush update-website` command will search for updaters in the `/path/to/my/updaters` directory.
+It will search for files with filenames starting with `updater-` and ending with `.php`, then for functions having the same name as the filename, adding `_update` in the end.
+Filenames are sorted alphabetically, so `updater-0001-test.php` will be loaded - and its updater executed - before `updater-0002-another-test.php`.
+
+###Example
+
+If file `/path/to/my/updaters/updater-0001-test.php` contains the function `updater_0001_test_update`, this function will be executed.
+
+```php
+<?php
+
+function updater_0001_test_update() {
+  drush_invoke_process('@self', 'vset', array('maintenance_mode', '1'));
+  drush_invoke_process('@self', 'pm-enable', array('mymodule'));
+  drush_invoke_process('@self', 'role-add-perm', array('myrole', 'administer mymodule'));
+  drush_invoke_process('@self', 'vset', array('maintenance_mode', '0'));
+}
+```
