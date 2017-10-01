@@ -1,14 +1,17 @@
 # Drupal website instance updater
 
 A Drush command to update a website instance by executing available "updaters".
+
 An updater is a PHP function which is executed during execution of the Drush `update-website` command.
 The Drush command keeps track of updaters already executed, so they are not executed twice on the same Drupal instance.
+
 Updaters have access to usual Drupal APIs and other Drush commands.
 
 This is useful when you want to test and automate your updates and deployments, e.g. after developing a new feature, since updaters are simple PHP scripts that can be included in your feature branches.
-Example usage is putting the site in maintenance mode, enabling a module, creating taxonomy terms, publishing a page and putting the site back online.
-Code is lightweight and integrates well in a continuous integration / continuous deployment workflow.
 
+Example usage is putting the site in maintenance mode, enabling a module, creating taxonomy terms, publishing a page and putting the site back online.
+
+Code is lightweight and integrates well in a continuous integration / continuous deployment workflow.
 It is an alternative to available Drupal update/deployment tools, as it does not require a module to be created, and is Drupal 7 and 8 compatible already.
 In theory, a Drupal instance configuration could be rebuilt from installation time to current state if only updated by updaters.
 
