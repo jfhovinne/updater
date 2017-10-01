@@ -28,9 +28,13 @@ drush update-website --path=/path/to/my/updaters
 
 In the above example, the `drush update-website` command will search for updaters in the `/path/to/my/updaters` directory.
 It will search for files with filenames starting with `updater-` and ending with `.php`, then for functions having the same name as the filename, adding `_update` in the end.
-Filenames are sorted alphabetically, so `updater-0001-test.php` will be loaded - and its updater executed - before `updater-0002-another-test.php`.
 
-###Example
+Filenames are sorted alphabetically, so `updater-0001-test.php` will be loaded - and its updater executed - before `updater-0002-another-test.php`.
+There is only one updater per file, while each file can contain other PHP functions.
+
+The default path to search for updaters is `{DRUPAL_ROOT}/sites/all/drush/updaters`.
+
+### Examples
 
 If file `/path/to/my/updaters/updater-0001-test.php` contains the function `updater_0001_test_update`, this function will be executed.
 
@@ -38,9 +42,37 @@ If file `/path/to/my/updaters/updater-0001-test.php` contains the function `upda
 <?php
 
 function updater_0001_test_update() {
+  // Create the webmaster role and assign it the 'administer nodes' permission
+  drush_invoke_process('@self', 'role-create', array('webmaster'));
+  drush_invoke_process('@self', 'role-add-perm', array('webmaster', 'administer nodes'));
+}
+```
+
+If file `/path/to/my/updaters/updater-0002-another-test.php` contains the function `updater_0002_another_test_update`, this function will be executed.
+
+```php
+<?php
+
+function updater_0002_another_test_update() {
+  // Drupal 7 only
+  // Put the site in maintenance mode, add terms to the Tags vocabulary
+  // then disable the maintenance mode
   drush_invoke_process('@self', 'vset', array('maintenance_mode', '1'));
-  drush_invoke_process('@self', 'pm-enable', array('mymodule'));
-  drush_invoke_process('@self', 'role-add-perm', array('myrole', 'administer mymodule'));
+
+  $vocab = taxonomy_vocabulary_machine_name_load('tags');
+  $values = array(
+    'module',
+    'theme',
+    'distribution'
+  );
+
+  foreach($values as $value) {
+    $term = (object) array(
+      'name' => $value,
+      'vid' => $vocab->vid,
+    );
+    taxonomy_term_save($term);
+  }
   drush_invoke_process('@self', 'vset', array('maintenance_mode', '0'));
 }
 ```
