@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Main Drush Updater command file.
+ */
+
+use Drush\updater\Controller;
+
 require __DIR__ . '/vendor/autoload.php';
 
 /**
@@ -29,8 +36,7 @@ function drush_updater_update_website() {
   unset($args[0]);
   $testing = drush_get_option('test', FALSE) ? TRUE : FALSE;
   $path = drush_get_option('path', DRUPAL_ROOT . '/sites/all/drush/updaters');
-  $result = \Drush\updater\Controller::executeUpdaters($path, $args, $testing);
+  $result = Controller::executeUpdaters($path, $args, $testing);
   drush_log(dt('All available updaters executed.'), 'success');
-  return $return;
+  return $result;
 }
-

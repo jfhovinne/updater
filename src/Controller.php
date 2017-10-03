@@ -1,6 +1,7 @@
 <?php
 
 namespace Drush\updater;
+
 use function Stringy\create as S;
 
 /**
@@ -19,19 +20,20 @@ class Controller {
    * @return array
    *   An array of executed functions returned results.
    */
-  public static function executeUpdaters($path, $args, $testing = false) {
+  public static function executeUpdaters($path, $args, $testing = FALSE) {
     $return = array();
     $path = self::getUpdatersRealPath($path);
     $updaters = self::getUpdaters($path);
-    foreach($updaters as $updater) {
-      include_once($path . $updater);
+    foreach ($updaters as $updater) {
+      include_once $path . $updater;
       $function = str_replace('-', '_', str_replace('.php', '', $updater)) . '_update';
-      if(function_exists($function) && !self::isUpdaterExecuted($function)) {
+      if (function_exists($function) && !self::isUpdaterExecuted($function)) {
         drush_print(dt('Executing @function', array('@function' => $function)));
         $result = call_user_func_array($function, $args);
-        if (!$testing && $result !== false) {
+        if (!$testing && $result !== FALSE) {
           self::setUpdaterExecuted($function);
-        } else {
+        }
+        else {
           drush_log(dt('Function @function returned an error',
             array('@function' => $function)), 'warning');
         }
@@ -53,7 +55,7 @@ class Controller {
   public static function getUpdaters($path) {
     $path = self::getUpdatersRealPath($path);
     $updaters = array_diff(scandir($path), array('..', '.'));
-    $updaters = array_filter($updaters, function($item) use ($path) {
+    $updaters = array_filter($updaters, function ($item) use ($path) {
       return !is_dir($path . $item) && S($item)->startsWith('updater-')
         && S($item)->endsWith('.php');
     });
@@ -71,10 +73,10 @@ class Controller {
    */
   public static function isUpdaterExecuted($updater) {
     $updates = self::getExecutedUpdaters();
-    if(is_array($updates) && in_array($updater, $updates)) {
-      return true;
+    if (is_array($updates) && in_array($updater, $updates)) {
+      return TRUE;
     }
-    return false;
+    return FALSE;
   }
 
   /**
@@ -85,9 +87,10 @@ class Controller {
    */
   public static function setUpdaterExecuted($updater) {
     $updates = self::getExecutedUpdaters();
-    if(is_array($updates)) {
+    if (is_array($updates)) {
       $updates[] = $updater;
-    } else {
+    }
+    else {
       $updates = array($updater);
     }
     self::setExecutedUpdaters($updates);
@@ -103,13 +106,13 @@ class Controller {
    *   The updaters real path.
    */
   private static function getUpdatersRealPath($path) {
-    if(!S($path)->startsWith('/')) {
+    if (!S($path)->startsWith('/')) {
       $path = realpath(DRUPAL_ROOT . '/' . $path);
     }
-    if(!file_exists($path) || !is_dir($path)) {
+    if (!file_exists($path) || !is_dir($path)) {
       return drush_set_error('INVALID_PATH', dt('Invalid updaters path.'));
     }
-    if(!S($path)->endsWith('/')) {
+    if (!S($path)->endsWith('/')) {
       $path .= '/';
     }
     return $path;
@@ -122,9 +125,10 @@ class Controller {
    *   An array of executed updaters.
    */
   private static function getExecutedUpdaters() {
-    if(drush_drupal_major_version() < 8) {
+    if (drush_drupal_major_version() < 8) {
       return variable_get('updater_executed_updaters');
-    } else {
+    }
+    else {
       return \Drupal::state()->get('updater_executed_updaters');
     }
   }
@@ -136,9 +140,10 @@ class Controller {
    *   The array of executed updaters.
    */
   private static function setExecutedUpdaters($updaters) {
-    if(drush_drupal_major_version() < 8) {
+    if (drush_drupal_major_version() < 8) {
       variable_set('updater_executed_updaters', $updaters);
-    } else {
+    }
+    else {
       \Drupal::state()->set('updater_executed_updaters', $updaters);
     }
   }
