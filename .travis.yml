@@ -13,3 +13,7 @@ install:
 
 script:
   - grumphp run
+  - DRUPAL_MAJOR_VERSION=7 scripts/setup-drupal.sh
+  - DRUPAL_MAJOR_VERSION=7 scripts/run-tests.sh
+  - DRUPAL_MAJOR_VERSION=8 scripts/setup-drupal.sh
+  - DRUPAL_MAJOR_VERSION=8 scripts/run-tests.sh
