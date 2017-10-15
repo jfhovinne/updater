@@ -7,7 +7,7 @@ if [ -d "$ROOTDIR/web" ]; then
   rm -rf $ROOTDIR/web
 fi
 
-vendor/bin/drush qd -y --core=drupal-$DRUPAL_MAJOR_VERSION --root=$ROOTDIR/web --no-server
+/usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" vendor/bin/drush qd -v -y --core=drupal-$DRUPAL_MAJOR_VERSION --root=$ROOTDIR/web --no-server
 mkdir -p web/sites/all/drush/updater
 ln -s $ROOTDIR/updater.drush.inc web/sites/all/drush/updater/updater.drush.inc
 ln -s $ROOTDIR/phpunit.xml.dist web/sites/all/drush/updater/phpunit.xml.dist
