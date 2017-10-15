@@ -3,6 +3,8 @@
 namespace Drush\updater\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Drush\updater\Controller;
+use Symfony\Component\Process\Process;
 
 /**
  * Updater test class.
@@ -10,34 +12,72 @@ use PHPUnit\Framework\TestCase;
 class UpdaterTest extends TestCase {
 
   /**
+   * Process of last executed command.
+   *
+   * @var Process
+   */
+  private $process;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     $this->drupal_major_version = getenv('DRUPAL_MAJOR_VERSION');
-    $this->updaters_path = dirname(__FILE__) . '/updaters/' . $this->drupal_major_version;
+    $this->updaters_path = dirname(__FILE__) . '/updaters/' . $this->drupal_major_version . '/';
   }
 
   /**
    * Test if the command is available.
    */
   public function testCommandAvailable() {
-    $output = shell_exec('drush');
-    $this->assertContains('update-website', $output);
+    $command = "drush";
+    $this->process = new Process($command);
+    $this->process->run();
+    $this->assertContains('update-website', $this->process->getOutput());
   }
 
   /**
-   * Test basic updaters.
+   * Test updater 01.
    */
-  public function testUpdaters1() {
-    $output = shell_exec("drush update-website --path=$this->updaters_path" . '/1');
-    $this->assertContains('Executing updater', $output);
-    if ($this->drupal_major_version < 8) {
-      $output = shell_exec('drush vget maintenance_mode');
+  public function testUpdater01() {
+    $updater = $this->updaters_path . 'updater-01-maintenance.php';
+    $this->assertTrue(Controller::isValidUpdater($updater));
+    $this->assertEquals($this->execute($updater, TRUE), 0);
+    $log = $this->process->getErrorOutput();
+    $this->assertContains('maintenance_mode 1', $log);
+  }
+
+  /**
+   * Test updater 02.
+   */
+  public function testUpdater02() {
+    $updater = $this->updaters_path . 'updater-02-maintenance.php';
+    $this->assertTrue(Controller::isValidUpdater($updater));
+    $this->assertEquals($this->execute($updater, TRUE), 0);
+    $log = $this->process->getErrorOutput();
+    $this->assertContains('maintenance_mode 0', $log);
+  }
+
+  /**
+   * Test all updaters.
+   */
+  public function testUpdaters() {
+    $this->assertEquals($this->execute($this->updaters_path, TRUE), 0);
+    $log = $this->process->getErrorOutput();
+    $this->assertContains('maintenance_mode 1', $log);
+    $this->assertContains('maintenance_mode 0', $log);
+  }
+
+  /**
+   * Execute drush update-website command.
+   */
+  private function execute($path, $testing = FALSE) {
+    $command = "drush update-website -v --path=$path";
+    if ($testing) {
+      $command .= " --test";
     }
-    else {
-      $output = shell_exec('drush sget system.maintenance_mode');
-    }
-    $this->assertContains('1', $output);
+    $this->process = new Process($command);
+    return $this->process->run();
   }
 
 }
