@@ -1,5 +1,7 @@
 # Drupal website instance updater
 
+[![Build Status](https://travis-ci.org/jfhovinne/updater.svg?branch=8.x-1.x)](https://travis-ci.org/jfhovinne/updater)
+
 A Drush command to update a website instance by executing available "updaters".
 
 An updater is a PHP function which is executed during execution of the Drush `update-website` command.
