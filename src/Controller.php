@@ -16,6 +16,8 @@ class Controller {
    *   The path to look for updaters.
    * @param array $args
    *   The command line arguments.
+   * @param bool $testing
+   *   If TRUE, $updaters will not be set as executed.
    *
    * @return array
    *   An array of executed functions returned results.
@@ -25,16 +27,16 @@ class Controller {
     $path = self::getUpdatersRealPath($path);
     $updaters = self::getUpdaters($path);
     foreach ($updaters as $updater) {
-      include_once $path . $updater;
-      $function = str_replace('-', '_', str_replace('.php', '', $updater)) . '_update';
+      include_once $updater;
+      $function = str_replace('-', '_', str_replace('.php', '', basename($updater))) . '_update';
       if (function_exists($function) && !self::isUpdaterExecuted($function)) {
-        drush_print(dt('Executing @function', array('@function' => $function)));
+        drush_log(dt('Executing @function', array('@function' => $function)), 'info');
         $result = call_user_func_array($function, $args);
         if (!$testing && $result !== FALSE) {
           self::setUpdaterExecuted($function);
         }
         else {
-          drush_log(dt('Function @function returned an error',
+          drush_log(dt('Function @function not set as executed.',
             array('@function' => $function)), 'warning');
         }
         $return[] = $result;
@@ -54,12 +56,32 @@ class Controller {
    */
   public static function getUpdaters($path) {
     $path = self::getUpdatersRealPath($path);
+    if (self::isValidUpdater($path)) {
+      return array($path);
+    }
     $updaters = array_diff(scandir($path), array('..', '.'));
     $updaters = array_filter($updaters, function ($item) use ($path) {
       return !is_dir($path . $item) && S($item)->startsWith('updater-')
         && S($item)->endsWith('.php');
     });
-    return $updaters;
+    return array_map(function($item) use ($path) {
+      return $path . $item;
+    }, $updaters);
+  }
+
+  /**
+   * Checks whether the specified path is a valid updater path.
+   *
+   * @param string $path
+   *   The path to check.
+   *
+   * @return bool
+   *   Returns TRUE if the path is a valid updater path, otherwise FALSE.
+   */
+  public static function isValidUpdater($path) {
+    return is_file($path)
+      && S(basename($path))->startsWith('updater-')
+      && S(basename($path))->endsWith('.php');
   }
 
   /**
@@ -109,10 +131,10 @@ class Controller {
     if (!S($path)->startsWith('/')) {
       $path = realpath(DRUPAL_ROOT . '/' . $path);
     }
-    if (!file_exists($path) || !is_dir($path)) {
+    if (!file_exists($path)) {
       return drush_set_error('INVALID_PATH', dt('Invalid updaters path.'));
     }
-    if (!S($path)->endsWith('/')) {
+    if (!is_file($path) && !S($path)->endsWith('/')) {
       $path .= '/';
     }
     return $path;
