@@ -1,11 +1,21 @@
 {
   "name": "jfhovinne/updater",
+  "type": "drupal-drush",
   "require": {
     "danielstjules/stringy": "~3.1.0"
+  },
+  "require-dev": {
+    "drupal/coder": "8.2.8",
+    "drush/drush": "~8.0",
+    "phpro/grumphp": "*",
+    "phpunit/phpunit": "5.*",
+    "squizlabs/php_codesniffer": "~2.9"
   },
   "autoload": {
     "psr-4": {
       "Drush\\updater\\": "src/"
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable" : true
 }

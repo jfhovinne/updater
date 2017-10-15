@@ -20,7 +20,7 @@ In theory, a Drupal instance configuration could be rebuilt from installation ti
 ```
 drush dl updater
 cd /path/to/updater
-composer install
+composer install --no-dev
 ```
 
 ## Usage
