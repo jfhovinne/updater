@@ -64,7 +64,7 @@ class Controller {
       return !is_dir($path . $item) && S($item)->startsWith('updater-')
         && S($item)->endsWith('.php');
     });
-    return array_map(function($item) use ($path) {
+    return array_map(function ($item) use ($path) {
       return $path . $item;
     }, $updaters);
   }
