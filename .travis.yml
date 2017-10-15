@@ -17,3 +17,6 @@ script:
   - DRUPAL_MAJOR_VERSION=7 tests/scripts/run-tests.sh
   - DRUPAL_MAJOR_VERSION=8 tests/scripts/setup-drupal.sh
   - DRUPAL_MAJOR_VERSION=8 tests/scripts/run-tests.sh
+
+notifications:
+  email: false
