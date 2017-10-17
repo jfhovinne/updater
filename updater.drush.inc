@@ -8,7 +8,7 @@
 use Drush\updater\Controller;
 
 /**
- * Implementation of hook_drush_command().
+ * Implements hook_drush_command().
  */
 function updater_drush_command() {
   $items = array();
@@ -27,7 +27,7 @@ function updater_drush_command() {
 }
 
 /**
- * Implementation of hook_drush_init().
+ * Implements hook_drush_init().
  */
 function updater_drush_init() {
   drush_autoload(__FILE__);
