@@ -7,10 +7,8 @@
 
 use Drush\updater\Controller;
 
-require __DIR__ . '/vendor/autoload.php';
-
 /**
- * Implementation of updater_drush_command().
+ * Implementation of hook_drush_command().
  */
 function updater_drush_command() {
   $items = array();
@@ -26,6 +24,13 @@ function updater_drush_command() {
   );
 
   return $items;
+}
+
+/**
+ * Implementation of hook_drush_init().
+ */
+function updater_drush_init() {
+  drush_autoload(__FILE__);
 }
 
 /**
