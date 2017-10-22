@@ -15,7 +15,6 @@ Example usage is putting the site in maintenance mode, enabling a module, creati
 
 Code is lightweight and integrates well in a continuous integration / continuous deployment workflow.
 It is an alternative to available Drupal update/deployment tools, as it does not require a module to be created, and is Drupal 7 and 8 compatible already.
-In theory, a Drupal instance configuration could be rebuilt from installation time to current state if only updated by updaters.
 
 ## Installation
 
@@ -38,6 +37,12 @@ Filenames are sorted alphabetically, so `updater-0001-test.php` will be loaded -
 There is only one updater per file, while each file can contain other PHP functions.
 
 The default path to search for updaters is `{DRUPAL_ROOT}/sites/all/drush/updaters`.
+
+You can also point to a specific updater file, for instance:
+
+```php
+drush update-website --path=/path/to/my/updaters/updater-0001-test.php
+```
 
 ### Examples
 
@@ -79,5 +84,20 @@ function updater_0002_another_test_update() {
     taxonomy_term_save($term);
   }
   drush_invoke_process('@self', 'vset', array('maintenance_mode', '0'));
+}
+```
+
+If you want to test an updater, and not set it as executed, the update function should return FALSE.
+
+```php
+<?php
+
+function updater_0003_testing_update() {
+  drush_invoke_process('@self', 'cset', array(
+    'system.site',
+    'page.front',
+    '/node/1',
+  ));
+  return FALSE;
 }
 ```
