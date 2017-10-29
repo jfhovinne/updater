@@ -101,3 +101,5 @@ function updater_0003_testing_update() {
   return FALSE;
 }
 ```
+
+More updater examples can be found in the [testing project](https://github.com/jfhovinne/updater-testing/tree/master/src/updaters).
