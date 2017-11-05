@@ -59,13 +59,27 @@ class UpdaterTest extends TestCase {
   }
 
   /**
+   * Test updater 03.
+   */
+  public function testUpdater03() {
+    $updater = $this->updaters_path . 'updater-03-false.php';
+    $this->assertTrue(Controller::isValidUpdater($updater));
+    $this->assertEquals($this->execute($updater), 0);
+    $log = $this->process->getErrorOutput();
+    $this->assertContains('not set as executed', $log);
+  }
+
+  /**
    * Test all updaters.
    */
   public function testUpdaters() {
+    $this->assertInternalType('array', Controller::getUpdaters($this->updaters_path));
     $this->assertEquals($this->execute($this->updaters_path, TRUE), 0);
     $log = $this->process->getErrorOutput();
     $this->assertContains('maintenance_mode 1', $log);
     $this->assertContains('maintenance_mode 0', $log);
+    $this->assertContains('not set as executed', $log);
+    $this->assertContains('All available updaters executed', $log);
   }
 
   /**
