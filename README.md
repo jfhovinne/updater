@@ -1,4 +1,4 @@
-# Drupal website instance updater
+# Drush Updater: Automated Drupal updates
 
 [![Build Status](https://travis-ci.org/jfhovinne/updater.svg?branch=8.x-1.x)](https://travis-ci.org/jfhovinne/updater)
 
@@ -15,6 +15,8 @@ Example usage is putting the site in maintenance mode, enabling a module, creati
 
 Code is lightweight and integrates well in a continuous integration / continuous deployment workflow.
 It is an alternative to available Drupal update/deployment tools, as it does not require a module to be created, and is Drupal 7 and 8 compatible already.
+
+Project page on drupal.org: [Updater](https://www.drupal.org/project/updater)
 
 ## Installation
 
