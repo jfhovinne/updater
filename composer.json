@@ -1,6 +1,10 @@
 {
   "name": "jfhovinne/updater",
+  "description": "Drush command to automate updates on a Drupal instance",
   "type": "drupal-drush",
+  "keywords": ["drupal", "drush", "automation"],
+  "homepage": "https://www.drupal.org/project/updater",
+  "license": "GPL-2.0",
   "require": {
     "danielstjules/stringy": "~3.1.0"
   },
