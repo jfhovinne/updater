@@ -93,7 +93,7 @@ class Controller {
    * @return bool
    *   Returns TRUE if the updater was already executed, otherwise FALSE.
    */
-  public static function isUpdaterExecuted($updater) {
+  private static function isUpdaterExecuted($updater) {
     $updates = self::getExecutedUpdaters();
     if (is_array($updates) && in_array($updater, $updates)) {
       return TRUE;
@@ -107,7 +107,7 @@ class Controller {
    * @param string $updater
    *   The name of the updater.
    */
-  public static function setUpdaterExecuted($updater) {
+  private static function setUpdaterExecuted($updater) {
     $updates = self::getExecutedUpdaters();
     if (is_array($updates)) {
       $updates[] = $updater;
