@@ -20,10 +20,21 @@ Project page on drupal.org: [Updater](https://www.drupal.org/project/updater)
 
 ## Installation
 
+### Using Drush
+
 ```
 drush dl updater
 cd /path/to/updater
 composer install --no-dev
+```
+
+### Using Composer
+
+From the website root:
+
+```
+composer require jfhovinne/updater
+drush cc drush
 ```
 
 ## Usage
