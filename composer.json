@@ -11,8 +11,8 @@
   },
   "require-dev": {
     "drupal/coder": "8.2.8",
-    "drush/drush": "~8.0",
-    "phpro/grumphp": "*",
+    "drush/drush": "^8|^9",
+    "phpro/grumphp": "^0.14",
     "phpunit/phpunit": "5.*",
     "squizlabs/php_codesniffer": "~2.9"
   },
