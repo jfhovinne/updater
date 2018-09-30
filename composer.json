@@ -21,6 +21,13 @@
       "Drush\\updater\\": "src/"
     }
   },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  },
   "minimum-stability": "dev",
   "prefer-stable" : true
 }
