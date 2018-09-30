@@ -26,7 +26,7 @@ class UpdaterCommands extends DrushCommands {
    * @command updater:update
    * @aliases update-website,upws
    */
-  public function website(array $options = ['path' => NULL, 'test' => NULL]) {
+  public function update_website(array $options = ['path' => NULL, 'test' => NULL]) {
     $args = func_get_args();
     unset($args[0]);
     $path = $options['path'] ? $options['path'] : DRUPAL_ROOT . '/sites/all/drush/updaters';
