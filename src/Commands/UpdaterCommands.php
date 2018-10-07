@@ -20,9 +20,6 @@ class UpdaterCommands extends DrushCommands {
     elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
       require_once __DIR__ . '/../vendor/autoload.php';
     }
-    else {
-      drush_set_error('DRUSH_APPLICATION_ERROR', dt('Autoloader not found.'));
-    }
   }
 
   /**
