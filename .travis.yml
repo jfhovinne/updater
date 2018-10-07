@@ -20,12 +20,12 @@ install:
   - composer self-update
   - composer -n ${HIGHEST_LOWEST-install}
 
-script:
+before_script:
   - grumphp run
-  - DRUPAL_MAJOR_VERSION=7 tests/scripts/setup-drupal.sh
-  - DRUPAL_MAJOR_VERSION=7 tests/scripts/run-tests.sh
-  - DRUPAL_MAJOR_VERSION=8 tests/scripts/setup-drupal.sh
-  - DRUPAL_MAJOR_VERSION=8 tests/scripts/run-tests.sh
+
+script:
+  - DRUPAL_MAJOR_VERSION=7 vendor/bin/phpunit tests
+  - DRUPAL_MAJOR_VERSION=8 vendor/bin/phpunit tests
 
 notifications:
   email: false
