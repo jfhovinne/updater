@@ -11,6 +11,21 @@ use Drush\updater\Controller;
 class UpdaterCommands extends DrushCommands {
 
   /**
+   * UpdaterCommands contructor.
+   */
+  public function __construct() {
+    if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+      require_once __DIR__ . '/../../vendor/autoload.php';
+    }
+    elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+      require_once __DIR__ . '/../vendor/autoload.php';
+    }
+    else {
+      drush_set_error('DRUSH_APPLICATION_ERROR', dt('Autoloader not found.'));
+    }
+  }
+
+  /**
    * Updates the website instance by executing available updaters.
    *
    * @param array $options
