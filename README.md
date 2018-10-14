@@ -20,21 +20,23 @@ Project page on drupal.org: [Updater](https://www.drupal.org/project/updater)
 
 ## Installation
 
-### Using Drush
-
-```
-drush dl updater
-cd /path/to/updater
-composer install --no-dev
-```
-
-### Using Composer
+### Using Composer (recommended)
 
 From the website root:
 
 ```
 composer require jfhovinne/updater
-drush cc drush
+```
+
+If you are using Drush 8, the command should be registered automatically.
+If you are using Drush 9, you may need to symlink `drush/contrib/updater` to `modules/updater` and execute `drush en -y updater` for the command to be registered.
+
+### Using Drush 8
+
+```
+drush dl updater
+cd /path/to/updater
+composer install --no-dev
 ```
 
 ## Usage
@@ -114,5 +116,3 @@ function updater_0003_testing_update() {
   return FALSE;
 }
 ```
-
-More updater examples can be found in the [testing project](https://github.com/jfhovinne/updater-testing/tree/master/src/updaters).
